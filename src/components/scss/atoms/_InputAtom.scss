@@ -1,0 +1,41 @@
+.input-atom {
+    textarea,
+    input {
+        font-size: 20px;
+        line-height: 32px;
+        height: 48px;
+        padding: 0 12px;
+        border: 2px solid #fff;
+        border-radius: 8px;
+        color: #fff;
+        width: 100%;
+        &::placeholder {
+            color: #fff;
+            opacity: 1;
+        }
+        &::selection {
+            color: $darkBackground;
+            background: #feede3;
+        }
+    }
+    &.dark {
+        textarea,
+        input {
+            border-color: $darkBackground;
+            color: $darkBackground;
+            &::placeholder {
+                color: $darkBackground;
+            }
+            &::selection {
+                color: blue;
+            }
+        }
+    }
+    
+    textarea {
+        height: initial;
+        min-height: 150px;
+        padding: 10px 12px 12px 12px;
+        resize: vertical!important;
+    }
+}
