@@ -39,9 +39,11 @@ import { connect } from 'react-redux';
 import { MenuDataInterFace } from '../interfaces/menu.interface';
 import { HeaderDataInterFace } from '../interfaces/header.interface';
 import { NavigatorDataInterFace } from '../interfaces/navigator.interface';
+import { CartCountInterFace } from '../interfaces/cartCount.interface';
 import { ToggleMenuACT } from '../actions/menuAction';
 import { HeaderOpenACT } from '../actions/HeaderAction';
 import { NavOpenACT } from '../actions/NavigatorAction';
+import { CartCountACT } from '../actions/CartCountAction';
 
 import serviceMenus from "./ServiceMenu";
 import Banner from "./../../assets/icons/banner.png";
@@ -103,6 +105,7 @@ const responsiveShops = {
 };
 
 const WebEcommerce = (props: any) => {
+    console.log('props ...',props)
     //cards
     let history = useHistory();
 
@@ -197,6 +200,12 @@ const WebEcommerce = (props: any) => {
         history.push("/web-ecommerce-cart");
     };
 
+    const addCart = () => {
+        if(props.cartCount) {
+            props.CartCountACT(props.cartCount.cartCount);
+        }
+    };
+
     return (
         <>
             <div className={stylesHeader.send_wrapper}>
@@ -273,7 +282,8 @@ const WebEcommerce = (props: any) => {
                                     />
                                 </div>
                                 <MessageIcon sx={{ color: '#FFF', fontSize: 24, mt: 2, mr: 5 }} className={stylesHeader.cursor} onClick={handleClick}></MessageIcon>
-                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={handleClick}></ShoppingBasketIcon>
+                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={goCart}></ShoppingBasketIcon>
+                                <span>{ props.cartCount.cartCount }</span>
                             </Box>
                         </Grid>
                     </Grid>
@@ -509,7 +519,7 @@ const WebEcommerce = (props: any) => {
                                                                         mt: 5,
                                                                     }}
                                                                     className={`${mainStyles.cursor}`}
-                                                                    onClick={goCart}
+                                                                    onClick={addCart}
                                                                 ></AddCircleIcon>
                                                             </div>
                                                         </Grid>
@@ -583,22 +593,23 @@ const WebEcommerce = (props: any) => {
             </div>
 
             {/* <div className={`${mainStyles.footer_div}`}>
-                    <span>© 2022 Send. All Rights Reserved.</span>
+                <span>© 2022 Send. All Rights Reserved.</span>
             </div> */}
         </>
     )
 }
 
 const mapStateToProps = ({
-    menuState, headerState, navState
-}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace } => {
+    menuState, headerState, navState, cartCount
+}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace; cartCount : CartCountInterFace } => {
     return {
         open: menuState,
         headerOpen: headerState,
-        navOpen: navState
+        navOpen: navState,
+        cartCount: cartCount
     };
 };
 
 export default connect(mapStateToProps, {
-    ToggleMenuACT, HeaderOpenACT, NavOpenACT
+    ToggleMenuACT, HeaderOpenACT, NavOpenACT, CartCountACT
 })(WebEcommerce);

@@ -50,6 +50,13 @@ import WebEcommerceThankYou from './pages/WebEcommerceThankYou';
 import WebEcommerceTrack from './pages/WebEcommerceTrack';
 import WebEcommerceTrackCompleted from './pages/WebEcommerceTrackCompleted';
 
+
+
+//fcm
+import { onMessageListener } from "./../firebaseInit";
+import Notifications from "./../components/Notifications/Notifications";
+import ReactNotificationComponent from "./../components/Notifications/ReactNotification";
+
 //platform test
 // import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 
@@ -388,7 +395,7 @@ const routes = [
       </React.Fragment>
     ),
   },
-   {
+  {
     path: `/${pageEndpoint.WebEcommerceTrack}`,
     exact: true,
     header: () => (
@@ -596,6 +603,11 @@ const SideMenuFunc = (param: any) => {
   return <SideMenu routeParam={param} />;
 }
 const Routes = (props: any) => {
+
+  const [show, setShow] = React.useState(false);
+  const [notification, setNotification] = React.useState({ title: "", body: "" });
+
+  console.log(show, notification);
   const toggleDrawer = () => {
     props.ToggleMenuACT(!props.open.open);
     props.NavOpenACT(true);
@@ -688,8 +700,30 @@ const Routes = (props: any) => {
       return <></>;
   }
 
+  console.log(show, notification);
+
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
+
   return (
     <div className={styles.container_wrapper}>
+      {show ? (
+        <ReactNotificationComponent
+          title={notification.title}
+          body={notification.body}
+        />
+      ) : (
+        <></>
+      )}
+      <Notifications />
       <div className={styles.container}>
         <div className={styles.primary_font}>
           <div id="main">

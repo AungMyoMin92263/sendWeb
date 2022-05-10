@@ -39,13 +39,15 @@ import { connect } from 'react-redux';
 import { MenuDataInterFace } from '../interfaces/menu.interface';
 import { HeaderDataInterFace } from '../interfaces/header.interface';
 import { NavigatorDataInterFace } from '../interfaces/navigator.interface';
+import { CartCountInterFace } from '../interfaces/cartCount.interface';
 import { ToggleMenuACT } from '../actions/menuAction';
 import { HeaderOpenACT } from '../actions/HeaderAction';
 import { NavOpenACT } from '../actions/NavigatorAction';
+import { CartCountACT } from '../actions/CartCountAction';
 
 import serviceMenus from "./ServiceMenu";
 import Banner2 from "./../../assets/icons/banner2.png";
-
+import Shopnow from './../../assets/icons/shopnow.jpg';
 import products from "./products";
 import categories from "./categories";
 
@@ -129,6 +131,12 @@ const WebEcommerceCategory = (props: any) => {
 
     const goCart = () => {
         history.push("/web-ecommerce-cart");
+    };
+
+    const addCart = () => {
+        if (props.cartCount) {
+            props.CartCountACT(props.cartCount.cartCount);
+        }
     };
 
     if (!props.open.open) props.ToggleMenuACT(true);
@@ -261,7 +269,8 @@ const WebEcommerceCategory = (props: any) => {
                                     />
                                 </div>
                                 <MessageIcon sx={{ color: '#FFF', fontSize: 24, mt: 2, mr: 5 }} className={stylesHeader.cursor} onClick={handleClick}></MessageIcon>
-                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={handleClick}></ShoppingBasketIcon>
+                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={goCart}></ShoppingBasketIcon>
+                                <span>{props.cartCount.cartCount}</span>
                             </Box>
                         </Grid>
                     </Grid>
@@ -334,23 +343,23 @@ const WebEcommerceCategory = (props: any) => {
                             </div>
                         </div>
                         <div className={`${mainStyles.wrapper_right_cat}`}>
-                            <div className={`${mainStyles.commerce_right_cat}`}>
-                                <div className={`${mainStyles.banner2ImageStyle_wrapper}`}>
-                                    <img src={Banner2} alt="Shop" className={`${mainStyles.banner2ImageStyle}`} />
-                                    <div className={`${stylesOnBoarding.w_100} ${stylesOnBoarding.align_right}`}>
-                                        <Box
-                                            sx={{
-                                                pt: 2,
-                                                pb: 2,
-                                                display: "flex",
-                                                justifyContent: "right",
-                                            }}
-                                        >
-                                            {step()}
-                                        </Box>
-                                    </div>
+                            {/* <div className={`${mainStyles.commerce_right_cat}`}> */}
+                            <div className={`${mainStyles.banner2ImageStyle_wrapper}`}>
+                                <img src={Shopnow} alt="Shop" className={`${mainStyles.banner2ImageStyle}`} />
+                                <div className={`${stylesOnBoarding.w_100} ${stylesOnBoarding.align_right}`}>
+                                    <Box
+                                        sx={{
+                                            pt: 2,
+                                            pb: 2,
+                                            display: "flex",
+                                            justifyContent: "right",
+                                        }}
+                                    >
+                                        {step()}
+                                    </Box>
                                 </div>
                             </div>
+                            {/* </div> */}
 
                             <div className={`${mainStyles.product_row_div_cat}`}>
                                 <Typography className={styles.send_typography}
@@ -380,8 +389,8 @@ const WebEcommerceCategory = (props: any) => {
                                                         sx={{
                                                             backgroundColor: "#FFF",
                                                             minHeight: "120px",
-                                                            mr: 1,
-                                                            mb: 1,
+                                                            mr: 2,
+                                                            mb: 2,
                                                             width: "159px",
                                                             height: "220px"
                                                         }}
@@ -457,7 +466,7 @@ const WebEcommerceCategory = (props: any) => {
                                                                                 mt: 5,
                                                                             }}
                                                                             className={`${mainStyles.cursor}`}
-                                                                            onClick={goCart}
+                                                                            onClick={addCart}
                                                                         ></AddCircleIcon>
                                                                     </div>
                                                                 </Grid>
@@ -483,15 +492,16 @@ const WebEcommerceCategory = (props: any) => {
 }
 
 const mapStateToProps = ({
-    menuState, headerState, navState
-}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace } => {
+    menuState, headerState, navState, cartCount
+}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace; cartCount: CartCountInterFace } => {
     return {
         open: menuState,
         headerOpen: headerState,
-        navOpen: navState
+        navOpen: navState,
+        cartCount: cartCount
     };
 };
 
 export default connect(mapStateToProps, {
-    ToggleMenuACT, HeaderOpenACT, NavOpenACT
+    ToggleMenuACT, HeaderOpenACT, NavOpenACT, CartCountACT
 })(WebEcommerceCategory);

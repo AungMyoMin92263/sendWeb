@@ -8,7 +8,6 @@ import 'react-modern-drawer/dist/index.css'
 import styles from '../css/pages.module.css';
 import mainStyles from '../css/web-commerce.module.css';
 import stylesHeader from '../css/header.module.css';
-import stylesOnBoarding from '../css/OnBoarding.module.css';
 import LogoIcon from './../../assets/icons/logo_white.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,6 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import MessageIcon from '@mui/icons-material/Message';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 // app bar
@@ -35,31 +35,24 @@ import { connect } from 'react-redux';
 import { MenuDataInterFace } from '../interfaces/menu.interface';
 import { HeaderDataInterFace } from '../interfaces/header.interface';
 import { NavigatorDataInterFace } from '../interfaces/navigator.interface';
+import { CartCountInterFace } from '../interfaces/cartCount.interface';
+
 import { ToggleMenuACT } from '../actions/menuAction';
 import { HeaderOpenACT } from '../actions/HeaderAction';
 import { NavOpenACT } from '../actions/NavigatorAction';
+import { CartCountACT } from '../actions/CartCountAction';
 
 import serviceMenus from "./ServiceMenu";
-import Shop from "./../../assets/icons/shop-commerce.png";
-
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-import PedalBikeIcon from '@mui/icons-material/PedalBike';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import StarIcon from '@mui/icons-material/Star';
 import EditIcon from '@mui/icons-material/Edit';
 
 // import component 👇
-import UserDashShopCard from "../atoms/ui-elements/UserDashShopCard";
 import products from "./products";
-import categories from "./categories";
 
 //custom textfield
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
 import makeStyles from '@mui/styles/makeStyles';
 import Checkbox from '@mui/material/Checkbox';
-import { DataGrid } from '@mui/x-data-grid';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -67,6 +60,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+
+import Dollar from './../../assets/icons/dollar.png';
+import Visa from './../../assets/icons/visa.png';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -200,7 +196,17 @@ const WebEcommerceCart = (props: any) => {
 
     let history = useHistory();
 
-    const goOrderSuccess= () => {
+    const goCart = () => {
+        history.push("/web-ecommerce-cart");
+    };
+    
+    const addCart = () => {
+        if(props.cartCount) {
+            props.CartCountACT(props.cartCount.cartCount);
+        }
+    };
+    
+    const goOrderSuccess = () => {
         history.push("/web-ecommerce-thankyou");
     };
     return (
@@ -279,7 +285,8 @@ const WebEcommerceCart = (props: any) => {
                                     />
                                 </div>
                                 <MessageIcon sx={{ color: '#FFF', fontSize: 24, mt: 2, mr: 5 }} className={stylesHeader.cursor} onClick={handleClick}></MessageIcon>
-                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={handleClick}></ShoppingBasketIcon>
+                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={goCart}></ShoppingBasketIcon>
+                                <span>{ props.cartCount.cartCount }</span>
                             </Box>
                         </Grid>
                     </Grid>
@@ -295,19 +302,12 @@ const WebEcommerceCart = (props: any) => {
                         Grocery Shopping Cart
                     </Typography>
                     <div className={styles.send_table_3row}>
-                        {/* <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            checkboxSelection
-                        /> */}
                         <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Item</TableCell>
-                                        <TableCell align="right">Qty</TableCell>
+                                        <TableCell>Qty</TableCell>
                                         <TableCell align="right">Price</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -339,7 +339,13 @@ const WebEcommerceCart = (props: any) => {
                                                 </Box>
 
                                             </TableCell>
-                                            <TableCell align="right">{row.qty}</TableCell>
+                                            <TableCell>
+                                                <div className={`${styles.flex}`}>
+                                                    <RemoveCircleIcon sx={{ fontSize: 30, mr: 1 }} className={`${styles.primary_color} ${styles.cursor}`}></RemoveCircleIcon>
+                                                    <span className={`${styles.mt_6}`}>{row.qty}</span>
+                                                    <AddCircleIcon sx={{ fontSize: 30, ml: 1 }} className={`${styles.primary_color} ${styles.cursor}`}></AddCircleIcon>
+                                                </div>
+                                            </TableCell>
                                             <TableCell align="right">{row.price}</TableCell>
                                         </TableRow>
                                     ))}
@@ -356,7 +362,14 @@ const WebEcommerceCart = (props: any) => {
 
                                 <CssTextField label="Enter Voucher Code" id="custom-css-outlined-input"
                                     className={mainStyles.textfield_cart} />&nbsp;&nbsp;&nbsp;
-                                <Button variant="contained" className={styles.send_button_active_cart_apply}>
+                                {/* <Button variant="contained" className={styles.send_button_active_cart_apply}>
+                                Apply
+                                </Button> */}
+
+                                <Button
+                                    variant="contained"
+                                    className={`${mainStyles.send_button_active_cart_apply}`}
+                                >
                                     Apply
                                 </Button>
 
@@ -385,7 +398,7 @@ const WebEcommerceCart = (props: any) => {
                             </div>
 
                             <div className={`${mainStyles.flex}`}>
-                                <Typography className={styles.send_typography} mr={29} mt={3} component="div" gutterBottom>
+                                <Typography className={styles.send_typography} mr={29} mt={3} mb={3} component="div" gutterBottom>
                                     <span className={stylesHeader.cursor}>Contactless delivery</span>
                                 </Typography>
                                 <Checkbox {...label} defaultChecked className={`${styles.float_right} ${styles.primary_color} ${mainStyles.mt_12}`} />
@@ -393,47 +406,54 @@ const WebEcommerceCart = (props: any) => {
                         </div>
                         <div className={`${mainStyles.wrapper_right_cart}`}>
                             <div className={`${mainStyles.pay_box}`}>
-
-                                <Typography className={styles.send_typography} mr={4} mt={1} component="div" gutterBottom>
+                                <Typography className={styles.send_typography} m={2} component="div" gutterBottom>
                                     <span className={stylesHeader.cursor}>Payments</span>
                                 </Typography>
                                 <Divider />
-                                <Grid container sx={{ mb: 3 }}>
+                                <Grid container sx={{ m: 2 }}>
                                     <Grid item xs={6}>
-
-                                        <Typography className={styles.send_typography} mr={4} mt={1} component="div" gutterBottom>
-                                            <span className={stylesHeader.cursor}>Cash</span>
-                                        </Typography>
+                                        <div className={styles.flex}>
+                                            <img src={Dollar} className={mainStyles.visa_image} />
+                                            <Typography className={styles.send_typography} mt={0.5} component="div" gutterBottom>
+                                                <span className={stylesHeader.cursor}>Cash</span>
+                                            </Typography>
+                                        </div>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Checkbox {...label} defaultChecked className={`${styles.float_right} ${styles.primary_color}`} />
                                     </Grid>
-                                    <Divider />
+                                </Grid>
+                                <Divider />
+                                <Grid container sx={{ m: 2 }}>
                                     <Grid item xs={6}>
-                                    <Typography className={styles.send_typography} mb={4} mt={1} component="div" gutterBottom>
-                                            <span className={stylesHeader.cursor}>
-                                                Visa 1234
-                                            </span>
-                                        </Typography>
+                                        <div className={styles.flex}>
+                                            <img src={Visa} className={mainStyles.visa_image} />
+                                            <Typography className={styles.send_typography} mt={0.5} component="div" gutterBottom>
+                                                <span className={stylesHeader.cursor}>
+                                                    Visa 1234
+                                                </span>
+                                            </Typography>
+                                        </div>
                                     </Grid>
                                     <Grid item xs={6}>
 
                                     </Grid>
-                                    <Divider />
+                                </Grid>
+                                <Divider />
 
+                                <Grid container sx={{ m: 2 }}>
                                     <Grid item xs={6}>
                                         Subtotal
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <span className={`${styles.float_right}`} >$ 14.97</span>
-
+                                    <Grid item xs={6} className={`${styles.right} ${styles.mr_8}`} >
+                                        <span>$ 14.97</span>
                                     </Grid>
                                     <Grid item xs={6}>
 
                                         Delivery Fees
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <span className={`${styles.float_right}`} >
+                                    <Grid item xs={6} className={`${styles.right} ${styles.mr_8}`} >
+                                        <span>
                                             $   4.00
                                         </span>
 
@@ -442,8 +462,8 @@ const WebEcommerceCart = (props: any) => {
 
                                         Discount
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <span className={`${styles.float_right}`} >
+                                    <Grid item xs={6} className={`${styles.right} ${styles.mr_8}`} >
+                                        <span>
                                             - $   1.00
                                         </span>
 
@@ -452,8 +472,8 @@ const WebEcommerceCart = (props: any) => {
 
                                         Total
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <span className={`${styles.float_right}`} >
+                                    <Grid item xs={6} className={`${styles.right} ${styles.mr_8}`} >
+                                        <span>
                                             $ 17.97
                                         </span>
                                     </Grid>
@@ -467,8 +487,10 @@ const WebEcommerceCart = (props: any) => {
                                         <Grid item xs={6}>
                                             Go to Checkout
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            $17.97
+                                        <Grid item xs={6} className={`${styles.right} ${styles.mr_8}`}>
+                                            <span >
+                                                $ 17.97
+                                            </span>
                                         </Grid>
                                     </Grid>
                                 </Button>
@@ -477,23 +499,33 @@ const WebEcommerceCart = (props: any) => {
                     </div>
                 </div>
             </div>
+            <div style={{ 
+                width: '100%',
+                display: 'block',
+                marginTop  : '25px'
+            }}>
+                
             <div className={`${mainStyles.footer_div}`}>
-                <span>© 2022 Send. All Rights Reserved.</span>
+                <div className={`${styles.mt_15}`}>
+                    <span>© 2022 Send. All Rights Reserved.</span>
+                </div>
+            </div>
             </div>
         </>
     )
 }
 
 const mapStateToProps = ({
-    menuState, headerState, navState
-}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace } => {
+    menuState, headerState, navState, cartCount
+}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace; cartCount : CartCountInterFace } => {
     return {
         open: menuState,
         headerOpen: headerState,
-        navOpen: navState
+        navOpen: navState,
+        cartCount: cartCount
     };
 };
 
 export default connect(mapStateToProps, {
-    ToggleMenuACT, HeaderOpenACT, NavOpenACT
+    ToggleMenuACT, HeaderOpenACT, NavOpenACT, CartCountACT
 })(WebEcommerceCart);

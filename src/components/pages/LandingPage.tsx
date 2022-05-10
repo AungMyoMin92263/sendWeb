@@ -208,7 +208,7 @@ const LandingPage = (props: any) => {
                 label="Search ..."
                 InputProps={{
                   endAdornment: (
-                    <NavLink to="/main-shop-details">
+                    <NavLink to="/web-ecommerce">
                       <IconButton>
                         <SearchIcon />
                       </IconButton>

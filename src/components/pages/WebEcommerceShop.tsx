@@ -39,9 +39,11 @@ import { connect } from 'react-redux';
 import { MenuDataInterFace } from '../interfaces/menu.interface';
 import { HeaderDataInterFace } from '../interfaces/header.interface';
 import { NavigatorDataInterFace } from '../interfaces/navigator.interface';
+import { CartCountInterFace } from '../interfaces/cartCount.interface';
 import { ToggleMenuACT } from '../actions/menuAction';
 import { HeaderOpenACT } from '../actions/HeaderAction';
 import { NavOpenACT } from '../actions/NavigatorAction';
+import { CartCountACT } from '../actions/CartCountAction';
 
 import serviceMenus from "./ServiceMenu";
 import Shop from "./../../assets/icons/shop-commerce.png";
@@ -108,6 +110,12 @@ const WebEcommerceShop = (props: any) => {
 
     const goCart = () => {
         history.push("/web-ecommerce-cart");
+    };
+    
+    const addCart = () => {
+        if(props.cartCount) {
+            props.CartCountACT(props.cartCount.cartCount);
+        }
     };
 
     let propsShop1 = {
@@ -261,7 +269,8 @@ const WebEcommerceShop = (props: any) => {
                                     />
                                 </div>
                                 <MessageIcon sx={{ color: '#FFF', fontSize: 24, mt: 2, mr: 5 }} className={stylesHeader.cursor} onClick={handleClick}></MessageIcon>
-                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={handleClick}></ShoppingBasketIcon>
+                                <ShoppingBasketIcon sx={{ color: '#FFF', fontSize: 24, mt: 2 }} className={stylesHeader.cursor} onClick={goCart}></ShoppingBasketIcon>
+                                <span>{ props.cartCount.cartCount }</span>
                             </Box>
                         </Grid>
                     </Grid>
@@ -334,7 +343,7 @@ const WebEcommerceShop = (props: any) => {
                             </div>
                         </div>
                         <div className={`${mainStyles.wrapper_right_cat}`}>
-                            <div className={`${mainStyles.commerce_right_cat} ${mainStyles.flex}`}>
+                            <div className={`${mainStyles.commerce_right_cat} ${mainStyles.flex} ${styles.p_15}`}>
                                 {/* <div className={`${mainStyles.banner2ImageStyle_wrapper}`}>
                                     <img src={Banner2} alt="Shop" className={`${mainStyles.banner2ImageStyle}`} />
                                     <div className={`${stylesOnBoarding.w_100} ${stylesOnBoarding.align_right}`}>
@@ -413,8 +422,8 @@ const WebEcommerceShop = (props: any) => {
                                                         sx={{
                                                             backgroundColor: "#FFF",
                                                             minHeight: "120px",
-                                                            mr: 1,
-                                                            mb: 1,
+                                                            mr: 2,
+                                                            mb: 2,
                                                             width: "159px",
                                                             height: "220px"
                                                         }}
@@ -490,7 +499,7 @@ const WebEcommerceShop = (props: any) => {
                                                                                 mt: 5,
                                                                             }}
                                                                             className={`${mainStyles.cursor}`}
-                                                                            onClick={goCart}
+                                                                            onClick={addCart}
                                                                         ></AddCircleIcon>
                                                                     </div>
                                                                 </Grid>
@@ -516,15 +525,16 @@ const WebEcommerceShop = (props: any) => {
 }
 
 const mapStateToProps = ({
-    menuState, headerState, navState
-}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace } => {
+    menuState, headerState, navState, cartCount
+}: StoreState): { open: MenuDataInterFace; headerOpen: HeaderDataInterFace; navOpen: NavigatorDataInterFace; cartCount : CartCountInterFace } => {
     return {
         open: menuState,
         headerOpen: headerState,
-        navOpen: navState
+        navOpen: navState,
+        cartCount: cartCount
     };
 };
 
 export default connect(mapStateToProps, {
-    ToggleMenuACT, HeaderOpenACT, NavOpenACT
+    ToggleMenuACT, HeaderOpenACT, NavOpenACT, CartCountACT
 })(WebEcommerceShop);

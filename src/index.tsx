@@ -18,6 +18,7 @@ declare global {
 const composeEnhansers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhansers(applyMiddleware(thunk)));
 const historyPathName = window.location.pathname.replace(/^\/([^]*).*$/, '$1');
+
 ReactDOM.render(
   // <BrowserRouter>
   //   <App path={historyPathName} />
