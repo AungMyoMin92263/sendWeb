@@ -35,6 +35,19 @@ import { HeaderOpenACT } from '../actions/HeaderAction';
 import { NavOpenACT } from '../actions/NavigatorAction';
 // import { DashboardCard } from '../atoms/DashboardCard';
 
+
+//apis
+import { GET, POST } from './fetch.js';
+
+const getData = async () => {
+let res = await GET('product');
+if(res){
+console.log('res',res)
+}else{
+
+}
+}
+
 const LandingPage = (props: any) => {
   const [type, setType] = React.useState('consumer')
 
